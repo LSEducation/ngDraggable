@@ -407,6 +407,7 @@ angular.module("ngDraggable", [])
                             element.css('height', obj.element[0].offsetHeight);
 
                             moveElement(obj.tx, obj.ty);
+                            updateDragStyles(obj.element);
                         }
 
                         _dragOffset = element[0].getBoundingClientRect();//ngDraggable.getPrivOffset(element);
@@ -418,6 +419,7 @@ angular.module("ngDraggable", [])
                             _ty = obj.y - document.body.scrollTop - (obj.element[0].offsetHeight/2);// + _dragOffset.top;
 
                             moveElement(_tx, _ty);
+                            updateDragStyles(obj.element);
                         }
                     };
                     var onDragEnd = function(evt, obj) {
@@ -446,6 +448,10 @@ angular.module("ngDraggable", [])
                         e.cancelBubble = true;
                         e.returnValue = false;
                         return false;
+                    };
+
+                    var updateDragStyles = function (dragElement) {
+                        element.toggleClass('drag-over', dragElement.hasClass('drag-over'));
                     };
 
                     initialize();
