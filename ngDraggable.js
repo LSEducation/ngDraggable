@@ -360,6 +360,7 @@ angular.module("ngDraggable", [])
             };
         }])
         .directive('ngDragClone', ['$parse', '$timeout', 'ngDraggable', function ($parse, $timeout, ngDraggable) {
+            var _tx, _ty;
             return {
                 restrict: 'A',
                 link: function (scope, element, attrs) {
@@ -406,6 +407,7 @@ angular.module("ngDraggable", [])
                             element.css('height', obj.element[0].offsetHeight);
 
                             moveElement(obj.tx, obj.ty);
+                            updateDragStyles(obj.element);
                         }
 
                         _dragOffset = element[0].getBoundingClientRect();//ngDraggable.getPrivOffset(element);
@@ -413,10 +415,11 @@ angular.module("ngDraggable", [])
                     var onDragMove = function(evt, obj) {
                         if(_allowClone) {
 
-                            _tx = obj.tx + _dragOffset.left;
-                            _ty = obj.ty + _dragOffset.top;
+                            _tx = obj.x - document.body.scrollLeft - (obj.element[0].offsetWidth/2);// + _dragOffset.left;
+                            _ty = obj.y - document.body.scrollTop - (obj.element[0].offsetHeight/2);// + _dragOffset.top;
 
                             moveElement(_tx, _ty);
+                            updateDragStyles(obj.element);
                         }
                     };
                     var onDragEnd = function(evt, obj) {
@@ -445,6 +448,10 @@ angular.module("ngDraggable", [])
                         e.cancelBubble = true;
                         e.returnValue = false;
                         return false;
+                    };
+
+                    var updateDragStyles = function (dragElement) {
+                        element.toggleClass('drag-over', dragElement.hasClass('drag-over'));
                     };
 
                     initialize();
